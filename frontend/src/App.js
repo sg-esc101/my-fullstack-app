@@ -5,7 +5,7 @@ function App() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/hello') // Adjust port if your backend runs on a different one
+    fetch('http://localhost:8080/api/hello') // Browser needs to resolve localhost
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
