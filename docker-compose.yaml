@@ -1,0 +1,30 @@
+services:
+  # Backend Service(Spring Boot)
+  backend:
+    build: ./backend # Tells Compose to build from the Dockerfile in the ./backend directory
+    ports:
+      - "8080:8080" # Map host port 8080 to container port 8080
+    networks:
+      - app-network # Connect to our custom network
+    restart: always # Always restart the container if it stops
+
+  # Frontend Service (React)
+  frontend:
+    build: ./frontend # Tells Compose to build from the Dockerfile in the ./frontend directory
+    ports:
+      - "3000:80" # Map host port 3000 to container port 80 (Nginx default)
+    networks:
+      - app-network # Connect to our custom network
+    depends_on: 
+      - backend #Ensures the backend service starts before the frontend
+    restart: always #Always restart the container if it stops
+    # Environment variable for React App in production build( optional, but good practice)
+    environment:
+      - REACT_APP_BACKEND_URL=http://backend:8080
+    # This won't be used by our current App.js
+    # We're sticking to localhost:8080 in App,js as the browser needs it
+    # This variable woudl be for if the frontend itself needed to make backend calls in a build process.
+    # or if the app was built to use an env var for its API URL
+networks:
+  app-network: # Define the custom network
+    driver: bridge # Use a bridge network
